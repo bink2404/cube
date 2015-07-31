@@ -1,0 +1,30 @@
+CACHE MANIFEST
+
+# hash rMe3aHVc5aYXunCl3GkV0PCBwcw=
+# uuid 0099894181c24622984f54012139f364
+# version 0.1
+
+CACHE:
+./images/rotate.png
+./images/rotate2.png
+./images/close.jpeg
+./images/dlgbkd.png
+./images/help.png
+./images/info.jpg
+./images/info.png
+./images/info_img.jpg
+./images/cubeicon.jpg
+./images/install.png
+./images/newgame.png
+./images/no.jpg
+./images/splash.jpg
+./images/splash2.jpg
+./images/up.png
+./images/yes.jpg
+./res/iscroll.js
+./res/phoneui.js
+./res/preloadCssImages.js
+./cube.css
+./cube.html
+./cube.js
+./cube_custom.js

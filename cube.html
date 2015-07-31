@@ -1,0 +1,381 @@
+<!--- This website and its content is copyright of Paul Scott - © explodingfruit 2012. All rights reserved.
+
+    Any redistribution or reproduction of part or all of the contents in any form is prohibited other than the following:
+
+    you may print or download to a local hard disk extracts for your personal and non-commercial use only
+    you may copy the content to individual third parties for their personal use, but only if you acknowledge the website as the source of the material
+
+You may not, except with our express written permission, distribute or commercially exploit the content. Nor may you transmit it or store it in any other website or other form of electronic retrieval system. --->
+
+<!DOCTYPE HTML>
+
+  <html manifest="cache.manifest">
+
+  <head>
+    <title>cube</title>
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+    <meta http-equiv="Content-Type" content="text/html;"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="keywords" content="smartphone, iphone, android, blackberry, game, gaming, mobile, mobile gaming">
+    <link rel="apple-touch-icon" href="images/cubeicon.jpg"/>
+
+<script type="text/javascript">
+  // Preload images
+  if (document.images) {
+	img1 = new Image();
+    img1.src = "images/cubeicon.jpg";
+	img2 = new Image();
+    img2.src = "images/rotate.png";
+	img3 = new Image();
+    img3.src = "images/rotate2.png";
+	img4 = new Image();
+    img4.src = "images/newgame.png";
+	img5 = new Image();
+    img5.src = "images/info.png";
+	img6 = new Image();
+    img6.src = "images/install.png";
+	img7 = new Image();
+    img7.src = "images/dlgbkd.png";
+	img8 = new Image();
+    img8.src = "images/close.jpeg";
+	img9 = new Image();
+    img9.src = "images/yes.jpg";
+	img10 = new Image();
+    img10.src = "images/no.jpg";
+	img11 = new Image();
+    img11.src = "images/info_img.jpg";
+	img12 = new Image();
+    img12.src = "images/splash.jpg";
+	img13 = new Image();
+    img13.src = "images/splash2.jpg";
+  }
+
+    if (navigator.userAgent.match(/iPad/i))
+    {
+      document.write ("<link rel=\"apple-touch-startup-image\" href=\"images/splash2.jpg\" />") ;
+    }
+    else
+    {
+      if (navigator.userAgent.match(/iPhone|iPod/i))
+      {
+        document.write ("<link rel=\"apple-touch-startup-image\" href=\"images/splash.jpg\" />") ;
+      }
+    }
+</script>
+
+    <link rel="stylesheet" href="cube.css"/>
+    <script type="text/javascript" src="res/preloadCssImages.js"></script>
+    <script type="text/javascript" src="res/iscroll.js"></script>
+    <script type="text/javascript" src="cube.js"></script>
+    <script type="text/javascript" src="res/phoneui.js"></script>
+    <script type="text/javascript" src="cube_custom.js"></script>
+
+  </head>
+
+  <body ontouchmove="BlockMove(event); class="cube-move">
+
+  <script language="javascript" type="text/javascript">
+
+    document.write ("<div style=\"display:none; width:320px; height:480px;z-index:3; position:relative\" id=\"rotate\" name=\"rotate\"><img style=\"zIndex:3; position=absolute\" src=\"images/rotate.png\"></div>") ;
+    document.write ("<div style=\"display:none; width:480px; height:480px;z-index:3; position:relative\" id=\"rotate2\" name=\"rotate2\"><img style=\"zIndex:3; position=absolute\" src=\"images/rotate2.png\"></div>") ;
+
+	if (window.addEventListener)
+    {
+		window.addEventListener('load', function() 
+		{
+			new FastClick(document.body);
+		}, false);
+    }
+
+    var browserType ;
+    var imageSize ;
+    var textSize ;
+    var iconSize ;
+    var dialogDisplayed = 0 ;
+    var dOffset = 0 ;
+
+    // Test for mobile browser and set image and text sizes
+    if (navigator.userAgent.match(/Android/i) || 
+        navigator.userAgent.match(/BlackBerry/i) ||
+        navigator.userAgent.match(/iPhone|iPod/i) ||
+        navigator.userAgent.match(/IEMobile/i))
+    {
+      browserType = "M" ;
+      iconSize = "20" ;
+      textSize = "14" ;
+      dOffset = 268 ;
+      imageSize = "26" ;
+
+      // Display message to rotate device if in portrait mode
+      if (window.orientation == 0)
+      {
+        document.getElementById('rotate2').style.display='block' ;
+      }
+
+      window.onorientationchange = checkOrientation ;
+    }
+    else
+    {
+      browserType = "D" ;
+      imageSize = "40" ;
+      iconSize = "30" ;
+      textSize = "20" ;
+      dOffset = 355 ;
+    }
+
+  </script>
+
+    <div class="m1-top-root">
+      <!-- Loading spinner  -->
+      <div class="m1-loading">
+        <div>
+          <canvas class="m1-loading-spinner" width="25" height="25"></canvas>        
+          <span class="m1-loading-text"></span>
+        </div>
+      </div>
+      <canvas class="m1-homescreen-prompt" width="250" height="120"></canvas>
+      <br />
+      <center>
+   
+      <div id='main' name='main' style="margin-top: -15px;">
+      <div id='top-padding'></div>
+
+      <script language="javascript" type="text/javascript">
+		document.write ("<div style=\"width:" + (imageSize * 16) + "px; height:" + (imageSize * 9.4) + "px; margin-top: 10px\" id=\"grid\" name=\"grid\"><img src=\"images/grid.jpg\" style=\"width:" + (imageSize * 16) + "px; height:" + (imageSize * 9.4) + "px;\"></div>") ;
+	
+      </script>
+
+      </center>
+
+      <div style="margin-top: 5px;">
+
+      <script language="javascript" type="text/javascript">
+        // Text size is dynamic, based on whether mobile or desktop
+        document.write("<center><table width=\"400px\"><tr>") ;
+        document.write("<td style=\"font-size:" + textSize + "px; text-align:center; width: 125px\"><img src=\"images/newgame.png\" alt=\"new game\" style=\"CURSOR: pointer; height: " + iconSize + "px; width: " + iconSize + "px;  margin-left: 10px; \" onclick=\"displayDialog('newgame');\"></td>") ;
+        document.write("<td style=\"width: 125px; text-align:right;\"><img src=\"images/info.png\" alt=\"info\" style=\"CURSOR: pointer; height: " + iconSize + "px; width: " + iconSize + "px;\" onclick=\"displayDialog('info');\"></td></tr></table></div></center>") ;
+
+        if ((browserType == 'M') && (!window.navigator.standalone) && (navigator.userAgent.match(/iPhone|iPod|iPad/i)))
+        {
+          // Display the installation div
+          document.write ("<center><div style=\"margin-top: -240px;\" id=\"install\" name=\"install\"><img src=\"images/install.png\"></div></center>") ;
+        }
+
+		document.write ("<center><div style=\"margin-top: -" + dOffset + "px; width:300px; height:200px; background-image: url(images/dlgbkd.png); z-index:2; position:relative; display:none\" id=\"info\" name=\"info\"><img src=\"images/close.jpeg\" alt=\"close\" style=\"CURSOR: pointer; margin-right: 10px; margin-top: 10px; height:16px; width: 16px; float: right;\" onclick=\"dialogDisplayed=0; document.getElementById('info').style.display='none';\"><br/><br/><br/><strong>cube</strong><br/><br/>&copy; Paul Scott</div></center>") ;
+		document.write ("<center><div style=\"margin-top: -" + dOffset + "px; width:300px; height:200px; background-image: url(images/dlgbkd.png); z-index:2; position:relative; display:none\" id=\"newgame\" name=\"newgame\"><br/><br/>New game ?<br/><br/><img src=\"images/yes.jpg\" alt=\"yes\" style=\"CURSOR: pointer; margin-right: 5px; margin-top: 5px; height:50px; width: 50px;\" onclick=\"dialogDisplayed=0; document.getElementById('newgame').style.display='none'; \">&nbsp;&nbsp;&nbsp;<img src=\"images/no.jpg\" alt=\"no\" style=\"CURSOR: pointer; margin-right: 5px; margin-top: 5px; height:50px; width: 50px;\" onclick=\"dialogDisplayed=0; document.getElementById('newgame').style.display='none';\"></div></center>") ;
+</script>
+
+</div>
+
+    <div class="wrapper">
+<div id="cube-move">
+    <div id="cube">
+        <div class="face one" id="one">
+            1
+        </div>
+        <div class="face two" id="two">
+            2
+        </div>
+        <div class="face three" id="three">
+            3
+        </div>
+        <div class="face four">
+            4
+        </div>
+        <div class="face five">
+            5
+        </div>
+        <div class="face six">
+            6
+        </div>
+    </div>
+</div>
+    </div>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+            <script>
+  
+$(function(){
+
+    var el = document.createElement('div'),
+        transformProps = 'transform WebkitTransform MozTransform OTransform msTransform'.split(' '),
+        transformProp = support(transformProps),
+        transitionDuration = 'transitionDuration WebkitTransitionDuration MozTransitionDuration OTransitionDuration msTransitionDuration'.split(' '),
+        transitionDurationProp = support(transitionDuration);
+
+    function support(props) {
+        for(var i = 0, l = props.length; i < l; i++) {
+            if(typeof el.style[props[i]] !== "undefined") {
+                return props[i];
+            }
+        }
+    }
+
+    var mouse = {
+            start : {}
+        },
+        touch = document.ontouchmove !== undefined,
+        viewport = {
+            x: -10,
+            y: 20,
+            el: $('.cube')[0],
+            move: function(coords) {
+                if(coords) {
+                    if(typeof coords.x === "number") this.x = coords.x;
+                    if(typeof coords.y === "number") this.y = coords.y;
+                }
+
+                this.el.style[transformProp] = "rotateX("+this.x+"deg) rotateY("+this.y+"deg)";
+            },
+            reset: function() {
+                this.move({x: 0, y: 0});
+            }
+        };
+
+    viewport.duration = function() {
+        var d = touch ? 50 : 500;
+        viewport.el.style[transitionDurationProp] = d + "ms";
+        return d;
+    }();
+
+    $(document).keydown(function(evt) {
+        switch(evt.keyCode)
+        {
+            case 37: // left
+                viewport.move({y: viewport.y - 90});
+                break;
+
+            case 38: // up
+                evt.preventDefault();
+                viewport.move({x: viewport.x + 90});
+                break;
+
+            case 39: // right
+                viewport.move({y: viewport.y + 90});
+                break;
+
+            case 40: // down
+                evt.preventDefault();
+                viewport.move({x: viewport.x - 90});
+                break;
+
+            case 27: //esc
+                viewport.reset();
+                break;
+
+            default:
+                break;
+        };
+    }).bind('mousedown touchstart', function(evt) {
+        delete mouse.last;
+        if($(evt.target).is('a, iframe')) {
+            return true;
+        }
+
+        evt.originalEvent.touches ? evt = evt.originalEvent.touches[0] : null;
+        mouse.start.x = evt.pageX;
+        mouse.start.y = evt.pageY;
+        $(document).bind('mousemove touchmove', function(event) {
+            // Only perform rotation if one touch or mouse (e.g. still scale with pinch and zoom)
+            if(!touch || !(event.originalEvent && event.originalEvent.touches.length > 1)) {
+                event.preventDefault();
+                // Get touch co-ords
+                event.originalEvent.touches ? event = event.originalEvent.touches[0] : null;
+                $('.viewport').trigger('move-viewport', {x: event.pageX, y: event.pageY});
+            }
+        });
+
+        $(document).bind('mouseup touchend', function () {
+            $(document).unbind('mousemove touchmove');
+        });
+    });
+
+    $('.viewport').bind('move-viewport', function(evt, movedMouse) {
+
+        // Reduce movement on touch screens
+        var movementScaleFactor = touch ? 4 : 1;
+
+        if (!mouse.last) {
+            mouse.last = mouse.start;
+        } else {
+            if (forward(mouse.start.x, mouse.last.x) != forward(mouse.last.x, movedMouse.x)) {
+                mouse.start.x = mouse.last.x;
+            }
+            if (forward(mouse.start.y, mouse.last.y) != forward(mouse.last.y, movedMouse.y)) {
+                mouse.start.y = mouse.last.y;
+            }
+        }
+
+        viewport.move({
+            x: viewport.x + parseInt((mouse.start.y - movedMouse.y)/movementScaleFactor),
+            y: viewport.y - parseInt((mouse.start.x - movedMouse.x)/movementScaleFactor)
+        });
+
+        mouse.last.x = movedMouse.x;
+        mouse.last.y = movedMouse.y;
+
+        function forward(v1, v2) {
+            return v1 >= v2 ? true : false;
+        }
+    });
+
+
+});        
+
+var props = 'transform WebkitTransform MozTransform OTransform msTransform'.split(' '),
+    prop,
+    el = document.createElement('div');
+
+for(var i = 0, l = props.length; i < l; i++) {
+    if(typeof el.style[props[i]] !== "undefined") {
+        prop = props[i];
+        break;
+    }
+}
+
+var xAngle = 45, yAngle = 45;
+document.getElementById('cube').style[prop] = "rotateX("+xAngle+"deg) rotateY("+yAngle+"deg)";
+$('body').keydown(function(evt) {
+    switch(evt.keyCode) {
+        case 37: // left
+            yAngle -= 90;
+			xAngle -= 90;
+			document.getElementById('one').style.background = 'red' ;
+            break;
+
+        case 38: // up
+            xAngle += 90;
+			yAngle -= 90;
+			document.getElementById('one').style.background = 'green' ;
+            break;
+
+        case 39: // right
+            yAngle += 90;
+			xAngle += 90;
+			document.getElementById('one').style.background = 'black' ;
+            break;
+
+        case 40: // down
+            xAngle -= 90;
+			yAngle += 90;
+			document.getElementById('one').style.background = 'yellow' ;
+            break;
+    };
+    document.getElementById('cube').style[prop] = "rotateX("+xAngle+"deg) rotateY("+yAngle+"deg)";
+
+}); </script>
+
+</div></center>
+
+    <script language="javascript" type="text/javascript">
+
+      document.write ("<div style=\"display: none;\" id=\"gameover\" name=\"gameover\"></div>") ;
+
+    </script>
+
+    </div>
+    </div>
+
+ </body>
+</html>
+
+

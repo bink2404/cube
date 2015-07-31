@@ -1,0 +1,36 @@
+<html>
+<head>
+<title>Canvas</title>
+<script type="text/javascript">
+// When the window has loaded, DOM is ready. Run the draw() function.
+window.onload = draw;   
+
+function draw(){
+  var canvas = document.getElementById('myCanvas');
+  if (canvas.getContext){
+    var canvas = document.getElementById("myCanvas");
+	var context = canvas.getContext("2d");
+
+	var imageObj = new Image();
+
+	imageObj.src = 'grid.jpg';
+
+	context.drawImage(imageObj, 0, 0, 400, 300);
+
+	context.fillStyle = "rgba(0, 0, 255, .5)";
+	context.fillRect(25, 25, 125, 125);
+
+  }
+  else{
+    // Put code to execute if browser doesn't have canvas support here
+  }
+}
+</script>
+
+<style type="text/css">
+  canvas { display: block; margin-left: auto; margin-right: auto; }</style>
+</head>
+<body>
+  <canvas id="myCanvas" width="400" height="300"></canvas>
+</body>
+</html>
